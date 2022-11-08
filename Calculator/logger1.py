@@ -1,3 +1,4 @@
+import logging
 from datetime import datetime
 from genericpath import exists
 
@@ -30,3 +31,8 @@ def write_log(l: str):
             lf.write(l)
 
 # logger(9, 'sqrt', 3)
+
+# logging.basicConfig(
+#     format='%(asctime)s - %(name)s - %(levelname)s - %(message)s', level=logging.INFO
+# )
+# logger = logging.getLogger(__name__)
