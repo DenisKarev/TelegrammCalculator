@@ -28,6 +28,14 @@ def start(update, context):
     update.message.reply_text(MESSAGE_HI, reply_markup=markup_key)
     return TOPMENU
 
+# def restart(update, context):
+#     # print(context.user_data)
+#     context.user_data.clear()
+#     # reply_keyboard = KEYS_M
+#     markup_key = ReplyKeyboardMarkup(KEYS_M, one_time_keyboard=True)
+#     update.message.reply_text('', reply_markup=markup_key)
+#     return TOPMENU
+
 def top_menu(update, context):
     text = update.message.text
     print(text)
@@ -50,30 +58,35 @@ def menu_one(update, context):
     if context.user_data['operation'] == 'Квадратный корень' or context.user_data['operation'] == 'Предыдущее меню':
         return 12
     else:
-        # markup1_key = ReplyKeyboardMarkup(KEYS_1, one_time_keyboard=True)
-        update.message.reply_text("Введите вещ. число:", reply_markup=ReplyKeyboardRemove())
-    user = update.message.text
-    print(user)
-    return INPUTV
+        if context.user_data['numberv2'] == None:
+            # markup1_key = ReplyKeyboardMarkup(KEYS_1, one_time_keyboard=True)
+            update.message.reply_text("Введите вещ. число:", reply_markup=ReplyKeyboardRemove())
+            user = update.message.text
+            print(user)
+            return INPUTV
+        else:
+            if context.user_data['operation'] == 'Cумма':
+                context.user_data['result'] = context.user_data['numberv1']+context.user_data['numberv2']
+            elif context.user_data['operation'] == 'Разность':
+                context.user_data['result'] = context.user_data['numberv1'] - context.user_data['numberv2']
+            elif context.user_data['operation'] == 'Умножение':
+                context.user_data['result'] = context.user_data['numberv1'] * context.user_data['numberv2']
+            elif context.user_data['operation'] == 'Деление':
+                context.user_data['result'] = context.user_data['numberv1'] / context.user_data['numberv2']
+            elif context.user_data['operation'] == 'Целочисленное деление':
+                context.user_data['result'] = context.user_data['numberv1'] // context.user_data['numberv2']
+            elif context.user_data['operation'] == 'Деление с остатком':
+                context.user_data['result'] = context.user_data['numberv1'] / context.user_data['numberv2']
+            elif context.user_data['operation'] == 'Возведение в спепень':
+                context.user_data['result'] = context.user_data['numberv1'] ** context.user_data['numberv2']
+            elif context.user_data['operation'] == 'Квадратный корень':
+                context.user_data['result'] = context.user_data['numberv1'] ** 0.5
+            # elif context.user_data['operation'] == 'Предыдущее меню':
+            update.message.reply_text(f"Результат:{context.user_data['result']}", reply_markup=ReplyKeyboardRemove())
+            print(context.user_data['result'])
+            return TOPMENU
 
-    if user == 'Cумма':
-        return SUMM
-    elif user == 'Разность':
-        return SUB
-    elif user == 'Умножение':
-        return MULT
-    elif user == 'Деление':
-        return DIV
-    elif user == 'Целочисленное деление':
-        return DIV_
-    elif user == 'Деление с остатком':
-        return REM
-    elif user == 'Возведение в спепень':
-        return POW
-    elif user == 'Квадратный корень':
-        return SQRT
-    elif user == 'Предыдущее меню':
-        return START
+
 
 def menu_two(update, context):
     reply_keyboard = [['Cумма', 'Разность', 'Умножение'],
@@ -93,14 +106,27 @@ def inputv_number(update, context):
     """Parsing a number"""
     text = update.message.text
     try:
-        context.user_data['numberv1'] = int(text)
+        context.user_data['number1'] = int(text)
     except:
         update.message.reply_text(
         'Not a number!!!',
         reply_markup=ReplyKeyboardRemove)
         return INPUTV
     print('Number !!!!')
-    return 
+    return
+
+def inputv_number2(update, context):
+    """Parsing a number"""
+    text = update.message.text
+    try:
+        context.user_data['numberv2'] = int(text)
+    except:
+        update.message.reply_text(
+        'Not a number!!!',
+        reply_markup=ReplyKeyboardRemove)
+        return INPUTV
+    print('Number !!!!')
+    return
     
 
 def echo(update, context):
