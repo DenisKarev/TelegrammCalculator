@@ -1,7 +1,8 @@
 import logging
 from bot_funcs import (
-    start, top_menu, menu_one, menu_two, inputv_number, cancel,
-    TOPMENU, CHOICE1, CHOICE2, INPUTV, FIRSTMENU, SECONDMENU, SUMM, SUB, MULT, DIV, DIV_, REM, POW, SQRT
+    start, top_menu, menu_one, menu_two, inputv_number, cancel,inputv_complex1,inputv_complex2,
+    TOPMENU, CHOICE1, CHOICE2, INPUTV, FIRSTMENU, SECONDMENU, SUMM, SUB, MULT, DIV, DIV_, REM, POW, SQRT,
+    COMPLEX1,COMPLEX2
 )
 
 from telegram import ReplyKeyboardMarkup, ReplyKeyboardRemove, Update
@@ -31,13 +32,18 @@ if __name__ == '__main__':
                                                   Деление|Целочисленное деление|Деление с остатком|\
                                                   Возведение в спепень|Квадратный корень|\
                                                   Предыдущее меню)$'), menu_one)],
-            CHOICE2: [MessageHandler(Filters.regex('^(Вещественные числа|Комплексные числа)$'), menu_two)],
+            CHOICE2: [MessageHandler(Filters.regex('^(Cумма|Разность|Умножение|\
+                                                  Деление|Целочисленное деление|Деление с остатком|\
+                                                  Возведение в спепень|Квадратный корень|\
+                                                  Предыдущее меню)$'), menu_two)],
             # FIRSTMENU: [MessageHandler(Filters.regex('^(Cумма|Разность|Умножение|\
             #                                         Деление|Целочисленное деление|Деление с остатком|\
             #                                         Возведение в спепень|Квадратный корень|\
             #                                         Предыдущее меню)$'), modules_menu)],
             # SECONDMENU: [MessageHandler(Filters.photo, photo), CommandHandler('skip', skip_photo)],
             # SUMM: [MessageHandler(Filters.dice, input_first_num)],
+            COMPLEX1: [MessageHandler(Filters.text & ~Filters.command, inputv_complex1)],
+            COMPLEX2: [MessageHandler(Filters.text & ~Filters.command, inputv_complex2)],
             INPUTV: [MessageHandler(Filters.text & ~Filters.command, inputv_number)],
         },
         # точка выхода из разговора
