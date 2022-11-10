@@ -79,12 +79,15 @@ def menu_one(update, context):
 def menu_two(update, context):
     text = update.message.text
     print(text)
+
     context.user_data['operation'] = text
     if context.user_data['operation'] == 'Предыдущее меню':
         print(context.user_data['operation'])
         markup_key = ReplyKeyboardMarkup(KEYS_M, one_time_keyboard=True)
         update.message.reply_text(f'Главное меню!\n{MESSAGE_HI[66:]}', reply_markup=markup_key)
         return TOPMENU
+    # markup_key = ReplyKeyboardMarkup(KEYS_2, one_time_keyboard=True)
+    # update.message.reply_text(f'Главное меню!\n{MESSAGE_HI[66:]}', reply_markup=markup_key)
     update.message.reply_text("Введите первое комплексное число через пробел")
     return COMPLEX1
 
@@ -133,21 +136,16 @@ def inputv_number(update, context):
 
 
 def inputv_complex1(update, context):
-    """Parsing a number"""
-    print("complex1_start")
     try:
         text = update.message.text.split()
         context.user_data['complex1'] = complex(float(text[0]), float(text[1]))
     except:
-        update.message.reply_text(
-            'Not a Complex number !!!',
-            reply_markup=ReplyKeyboardRemove)
+        update.message.reply_text('Непонятно, попробуйте еще раз')
         return COMPLEX1
-    print('Complex_Number1 !!!!')
     if context.user_data['operation'] == 'Квадратный корень' and context.user_data['complex1'] != '':
          context.user_data['result'] = context.user_data['complex1'] ** 0.5
          update.message.reply_text(
-             f"Квадрат корень ! из {context.user_data['complex1']} равен {context.user_data['result']}",
+             f"Квадратный корень из {context.user_data['complex1']} равен {context.user_data['result']}",
                                 reply_markup=ReplyKeyboardMarkup(KEYS_C, one_time_keyboard=True))
          return CONTMENU
     update.message.reply_text("Ведите второе комплексное число")
@@ -155,22 +153,16 @@ def inputv_complex1(update, context):
 
 
 def inputv_complex2(update, context):
-    """Parsing a number"""
-    print("complex2_start")
     try:
         text = update.message.text.split()
         context.user_data['complex2'] = complex(float(text[0]), float(text[1]))
     except:
-        update.message.reply_text(
-            'Not a Complexnumber !!!',
-            reply_markup=ReplyKeyboardRemove)
+        update.message.reply_text('Непонятно, попробуйте еще раз')
         return COMPLEX2
-    print('Complex2_Number !!!!')
     result = comlex_operation(update, context)
     update.message.reply_text(f" {context.user_data['operation']} комплексных чисел\n{context.user_data['complex1']}\n"
                               f"{context.user_data['complex2']}\nРавна {result}",
                                 reply_markup=ReplyKeyboardMarkup(KEYS_C, one_time_keyboard=True))
-    # update.message.reply_text(f"давай еще разок")
     return CONTMENU
 
 
@@ -214,7 +206,7 @@ def comlex_operation(update, context):
     com1 = context.user_data['complex1']
     com2 = context.user_data['complex2']
     print(text)
-    update.message.reply_text(f"Первое число{com1} второе число{com2} оператор {context.user_data['operation']}")
+    # update.message.reply_text(f"Первое число{com1} второе число{com2} оператор {context.user_data['operation']}")
     operation = context.user_data['operation']
     if com2 != '':
         if operation == 'Cумма':
