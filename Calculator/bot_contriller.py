@@ -1,4 +1,4 @@
-from gtoken import g_token
+from gtoken.gtoken import g_token
 import logging
 from bot_funcs import (
     start, top_menu, menu_one, menu_two, inputv_number, inputv_2number, cont_menu, inputv_complex1, inputv_complex2,
