@@ -1,6 +1,6 @@
 import logging
 from bot_consts import OPERATIONSV, MESSAGE_HI, KEYS_M, KEYS_1, KEYS_2, KEYS_C
-
+from logger1 import write_log, logger as log
 from telegram import ReplyKeyboardMarkup, ReplyKeyboardRemove, Update
 from telegram.ext import (
     Updater,
@@ -47,10 +47,12 @@ def top_menu(update, context):
     if context.user_data['nums'] == 1:
         markup1_key = ReplyKeyboardMarkup(KEYS_1, one_time_keyboard=True)
         update.message.reply_text('Выберите арифметическое действие: ', reply_markup=markup1_key, )
+        write_log(text)
         return CHOICE1
     elif context.user_data['nums'] == 2:
         markup1_key = ReplyKeyboardMarkup(KEYS_2, one_time_keyboard=True)
         update.message.reply_text('Выберите арифметическое действие: ', reply_markup=markup1_key, )
+        write_log(text)
         return CHOICE2
 
 
@@ -89,6 +91,7 @@ def menu_two(update, context):
     # markup_key = ReplyKeyboardMarkup(KEYS_2, one_time_keyboard=True)
     # update.message.reply_text(f'Главное меню!\n{MESSAGE_HI[66:]}', reply_markup=markup_key)
     update.message.reply_text("Введите первое комплексное число через пробел")
+    write_log(" выбрано действие " + text)
     return COMPLEX1
 
 
@@ -129,6 +132,10 @@ def inputv_number(update, context):
     except:
         update.message.reply_text('Непонятно, попробуйте еще раз')
         return INPUTV
+    if context.user_data['nums'] == 2:
+        context.user_data['complex2'] = float(number)
+        result_complex(update, context)
+        return CONTMENU
     temp = OPERATIONSV[context.user_data['operation']](context.user_data['numberv1'])
     update.message.reply_text(f'Результат операции: {temp}',
                                 reply_markup=ReplyKeyboardMarkup(KEYS_C, one_time_keyboard=True))
@@ -141,14 +148,19 @@ def inputv_complex1(update, context):
         context.user_data['complex1'] = complex(float(text[0]), float(text[1]))
     except:
         update.message.reply_text('Непонятно, попробуйте еще раз')
+        write_log("Ошибка ввода комплексного числа: " + text+';')
         return COMPLEX1
     if context.user_data['operation'] == 'Квадратный корень' and context.user_data['complex1'] != '':
          context.user_data['result'] = context.user_data['complex1'] ** 0.5
+         log(context.user_data['complex1'], context.user_data['operation'], context.user_data['result'])
          update.message.reply_text(
              f"Квадратный корень из {context.user_data['complex1']} равен {context.user_data['result']}",
                                 reply_markup=ReplyKeyboardMarkup(KEYS_C, one_time_keyboard=True))
          return CONTMENU
-    update.message.reply_text("Ведите второе комплексное число")
+    if context.user_data['operation'] == 'Возведение в спепень':
+        update.message.reply_text("Введите степень")
+        return INPUTV
+    update.message.reply_text("Введите второе комплексное число")
     return COMPLEX2
 
 
@@ -156,13 +168,16 @@ def inputv_complex2(update, context):
     try:
         text = update.message.text.split()
         context.user_data['complex2'] = complex(float(text[0]), float(text[1]))
+        if context.user_data['operation'] == 'Деление' and float(text[0]) == 0:
+            update.message.reply_text('Нельзя делить на ноль')
+            write_log(" попытка делить на 0" + context.user_data['complex1'] + "на" + context.user_data['complex2'])
+            return COMPLEX2
+
     except:
         update.message.reply_text('Непонятно, попробуйте еще раз')
+        write_log(', Ошибка ввода 2го комплекного числа введено ' + text)
         return COMPLEX2
-    result = comlex_operation(update, context)
-    update.message.reply_text(f" {context.user_data['operation']} комплексных чисел\n{context.user_data['complex1']}\n"
-                              f"{context.user_data['complex2']}\nРавна {result}",
-                                reply_markup=ReplyKeyboardMarkup(KEYS_C, one_time_keyboard=True))
+    result_complex(update, context)
     return CONTMENU
 
 
@@ -178,9 +193,11 @@ def cont_menu(update, context):
     if text == 'Еще разок':
         markup_key = ReplyKeyboardMarkup(KEYS_M, one_time_keyboard=True)
         update.message.reply_text(f'Главное меню!\n{MESSAGE_HI[66:]}', reply_markup=markup_key)
+        write_log('\nЕще разок ')
         return TOPMENU
     elif text == 'Выход':
         update.message.reply_text('ОКи, приходите еще! %))')
+        write_log('\nВыход ')
         return ConversationHandler.END
     else:
         logger.warning('Щось пошло не так')
@@ -224,3 +241,10 @@ def comlex_operation(update, context):
         elif operation == 'Возведение в спепень':
             context.user_data['result'] = com1 ** com2
     return context.user_data['result']
+
+def result_complex(update, context):
+    result = comlex_operation(update, context)
+    log(context.user_data['complex1'], context.user_data['operation'], result, context.user_data['complex2'])
+    update.message.reply_text(f" {context.user_data['operation']} комплексных чисел\n{context.user_data['complex1']}\n"
+                              f"{context.user_data['complex2']}\nРавна {result}",
+                              reply_markup=ReplyKeyboardMarkup(KEYS_C, one_time_keyboard=True))
