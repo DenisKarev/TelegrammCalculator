@@ -175,10 +175,9 @@ def inputv_complex2(update, context):
     try:
         text = update.message.text.split()
         context.user_data['complex2'] = complex(float(text[0]), float(text[1]))
-        if context.user_data['operation'] == 'Деление' and float(text[0]) == 0 and float(text[1]):
+        if context.user_data['operation'] == 'Деление' and (context.user_data['complex1'] == 0) and (context.user_data['complex2'] == 0):
             update.message.reply_text('Нельзя делить на ноль')
-            write_log(" попытка делить на 0" +
-                      context.user_data['complex1'] + "на" + context.user_data['complex2'])
+            write_log(" попытка делить на 0" + context.user_data['complex1'] + "на" + context.user_data['complex2'])
             logger.warning('Пользователь %s пытался поделить на ноль!', update.message.from_user.first_name)
             return COMPLEX2
     except:
@@ -241,10 +240,10 @@ def comlex_operation(update, context):
             context.user_data['result'] = com1 * com2
         elif operation == 'Деление':
             context.user_data['result'] = com1 / com2
-        elif operation == 'Целочисленное деление':
-            context.user_data['result'] = com1 // com2
-        elif operation == 'Деление с остатком':
-            context.user_data['result'] = com1 / com2
+        # elif operation == 'Целочисленное деление':
+        #     context.user_data['result'] = com1 // com2
+        # elif operation == 'Деление с остатком':
+        #     context.user_data['result'] = com1 / com2
         elif operation == 'Возведение в спепень':
             context.user_data['result'] = com1 ** com2
     return context.user_data['result']
