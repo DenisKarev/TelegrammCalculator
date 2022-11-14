@@ -175,7 +175,7 @@ def inputv_complex2(update, context):
     try:
         text = update.message.text.split()
         context.user_data['complex2'] = complex(float(text[0]), float(text[1]))
-        if context.user_data['operation'] == 'Деление' and (context.user_data['complex1'] == 0) and (context.user_data['complex2'] == 0):
+        if context.user_data['operation'] == 'Деление' and (context.user_data['complex2'] == 0): # (context.user_data['complex1'] == 0) and 
             update.message.reply_text('Нельзя делить на ноль')
             write_log(" попытка делить на 0" + context.user_data['complex1'] + "на" + context.user_data['complex2'])
             logger.warning('Пользователь %s пытался поделить на ноль!', update.message.from_user.first_name)
