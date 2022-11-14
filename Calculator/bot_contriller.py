@@ -1,4 +1,4 @@
-# from gtoken.gtoken import g_token
+from gtoken.gtoken import g_token
 import logging
 from bot_funcs import (
     start, top_menu, menu_one, menu_two, inputv_number, inputv_2number, cont_menu, inputv_complex1, inputv_complex2,
@@ -15,7 +15,7 @@ from telegram.ext import (
     Filters,
     ConversationHandler,
 )
-g_token = "5502983826:AAHqnDHCxzwFkZeJI08dxeLk0XNniSUrbMY"
+# g_token = "5502983826:AAHqnDHCxzwFkZeJI08dxeLk0XNniSUrbMY"
 
 if __name__ == '__main__':
     # Создаем Updater и передаем ему токен вашего бота.
